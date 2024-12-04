@@ -20,7 +20,7 @@ def find_optimal_hyperparameters(model, param_grid, X_train, y_train, cv=5, scor
     return knn_gscv.best_params_
 
 
-def load_model_from_numpy(model, numpy_file):
+def load_model_from_numpy(model, numpy_file, random_state=False):
     """
     Load a model from a numpy file
     
@@ -32,7 +32,10 @@ def load_model_from_numpy(model, numpy_file):
     model: The model loaded from the numpy file
     """
     params = np.load(numpy_file, allow_pickle=True).item()
-    model = model(**params)
+    if random_state:
+        model = model(**params, random_state=random_state)
+    else:
+        model = model(**params)
     return model
 
 def plot_roc_curves(results):
