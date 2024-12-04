@@ -5,9 +5,12 @@ import numpy as np
 import json
 import os
 import matplotlib.pyplot as plt
+import numpy as np
 
 
-def find_optimal_hyperparameters(model, param_grid, X_train, y_train, cv=5, scoring='accuracy', n_jobs=-1, save_dir="", save_file='knn_best_params.npy'):
+
+
+def find_optimal_hyperparameters(model, param_grid, X_train, y_train, cv=5, scoring='accuracy', n_jobs=-1, save_dir="", save_file='knn_best_params.json'):
 
     gs_cv = GridSearchCV(model, param_grid, cv=cv, scoring=scoring, n_jobs=n_jobs)
     gs_cv.fit(X_train, y_train)
@@ -90,7 +93,7 @@ def fit_and_evaluate(model, X_train, y_train, X_test, y_test, verbose=False, flo
         float_precision (int): The number of decimal places to print
 
     Returns:
-        tuple: The accuracy, precision, recall, F1, ROC AUC, and confusion matrix
+        dict: The accuracy, precision, recall, F1, ROC AUC, confusion matrix, fpr, tpr
     """
     
     model.fit(X_train, y_train)
@@ -98,7 +101,7 @@ def fit_and_evaluate(model, X_train, y_train, X_test, y_test, verbose=False, flo
 
 def evaluate(model, X_test, y_test, verbose=False, float_precision=4):
     """
-    Evaluates a model on the given data and returns the accuracy, precision, recall, F1, ROC AUC, and confusion matrix.
+    Evaluates a model on the given data and returns the accuracy, precision, recall, F1, ROC AUC, and confusion matrix, fpr, tpr as a dictionary.
     
     Parameters:
         model: The model
@@ -107,7 +110,7 @@ def evaluate(model, X_test, y_test, verbose=False, float_precision=4):
         verbose (bool): Whether to print the results
         float_precision (int): The number of decimal places to print
     Returns:
-        tuple: The accuracy, precision, recall, F1, ROC AUC, and confusion matrix
+        dict: The accuracy, precision, recall, F1, ROC AUC, confusion matrix, fpr, tpr
     """
     
     y_pred = model.predict(X_test)
@@ -122,11 +125,24 @@ def evaluate(model, X_test, y_test, verbose=False, float_precision=4):
     fpr, tpr, _ = roc_curve(y_test, y_pred_prob)
 
     if verbose:
+        print(f"Evaluating {model.__class__.__name__}")
         print(f"Accuracy: {acc:.{float_precision}f}")
         print(f"Precision: {precision:.{float_precision}f}")
         print(f"Recall: {recall:.{float_precision}f}")
         print(f"F1: {f1:.{float_precision}f}")
         print(f"ROC AUC: {roc_auc:.{float_precision}f}")
         print(f"Confusion Matrix: \n{cm}")
+        print()
     
-    return acc, precision, recall, f1, roc_auc, cm
+    results_dict = {
+        "accuracy": acc,
+        "precision": precision,
+        "recall": recall,
+        "f1": f1,
+        "roc_auc": roc_auc,
+        "confusion_matrix": cm,
+        "fpr": fpr,
+        "tpr": tpr,
+    }
+
+    return results_dict
