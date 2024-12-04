@@ -27,6 +27,7 @@ def load_model_from_numpy(model, numpy_file, random_state=False):
     Parameters:
     model: The model class to load
     numpy_file (str): The path to the numpy file containing the model parameters
+    random_state (int): The random state to use when creating the model (if applicable)
 
     Returns:
     model: The model loaded from the numpy file
