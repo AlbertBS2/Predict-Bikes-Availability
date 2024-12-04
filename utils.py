@@ -2,6 +2,7 @@
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, confusion_matrix, roc_curve
 from sklearn.model_selection import GridSearchCV
 import numpy as np
+import json
 import os
 import matplotlib.pyplot as plt
 
@@ -15,24 +16,27 @@ def find_optimal_hyperparameters(model, param_grid, X_train, y_train, cv=5, scor
 
     if save_dir:
         print("Saving best parameters to '{}'".format(os.path.join(save_dir, save_file).replace('\\', '/').strip()))
-        np.save(os.path.join(save_dir, save_file), gs_cv.best_params_)
+        with open(os.path.join(save_dir, save_file), 'w') as f:
+            json.dump(gs_cv.best_params_, f)
     
     return gs_cv.best_params_
 
 
-def load_model_from_numpy(model, numpy_file, extra_parms={}):
+def load_model_from_json(model, json_file, extra_parms={}):
     """
-    Load a model from a numpy file
+    Load a model from a json file
     
     Parameters:
     model: The model class to load
-    numpy_file (str): The path to the numpy file containing the model parameters
+    json_file (str): The path to the json file
     extra_parms (dict): Extra parameters to pass to the model
 
     Returns:
-    model: The model loaded from the numpy file
+    model: The model loaded from the json file
     """
-    params = np.load(numpy_file, allow_pickle=True).item()
+    with open(json_file, 'r') as f:
+        params = json.load(f)
+
     model = model(**params, **extra_parms)
 
     return model
@@ -50,21 +54,21 @@ def plot_roc_curves(results):
     plt.grid()
     plt.show()
 
-def fit_and_evaluate_multiple(models, X_train, y_train, X_test, y_test, verbose=False, float_precision=3):
+def fit_and_evaluate_multiple(models, X_train, y_train, X_test, y_test, verbose=False, float_precision=4):
     """
     Fits multiple models on the given data and evaluates them on the testing data.
     
     Parameters:
-    models (list): The models
-    X_train (pd.DataFrame): The training data
-    y_train (pd.Series): The training labels
-    X_test (pd.DataFrame): The testing data
-    y_test (pd.Series): The testing labels
-    verbose (bool): Whether to print the results
-    float_precision (int): The number of decimal places to print
+        models (list): The models
+        X_train (pd.DataFrame): The training data
+        y_train (pd.Series): The training labels
+        X_test (pd.DataFrame): The testing data
+        y_test (pd.Series): The testing labels
+        verbose (bool): Whether to print the results
+        float_precision (int): The number of decimal places to print
 
     Returns:
-    dict: The accuracy, precision, recall, F1, ROC AUC, and confusion matrix for each model
+        dict: The accuracy, precision, recall, F1, ROC AUC, and confusion matrix for each model
     """
     
     results = {}
@@ -72,27 +76,27 @@ def fit_and_evaluate_multiple(models, X_train, y_train, X_test, y_test, verbose=
         results[model.__class__.__name__] = fit_and_evaluate(model, X_train, y_train, X_test, y_test, verbose, float_precision)
     return results
 
-def fit_and_evaluate(model, X_train, y_train, X_test, y_test, verbose=False, float_precision=3):
+def fit_and_evaluate(model, X_train, y_train, X_test, y_test, verbose=False, float_precision=4):
     """
     Fits a model on the given data and evaluates it on the testing data.
     
     Parameters:
-    model: The model
-    X_train (pd.DataFrame): The training data
-    y_train (pd.Series): The training labels
-    X_test (pd.DataFrame): The testing data
-    y_test (pd.Series): The testing labels
-    verbose (bool): Whether to print the results
-    float_precision (int): The number of decimal places to print
+        model: The model
+        X_train (pd.DataFrame): The training data
+        y_train (pd.Series): The training labels
+        X_test (pd.DataFrame): The testing data
+        y_test (pd.Series): The testing labels
+        verbose (bool): Whether to print the results
+        float_precision (int): The number of decimal places to print
 
     Returns:
-    tuple: The accuracy, precision, recall, F1, ROC AUC, and confusion matrix
+        tuple: The accuracy, precision, recall, F1, ROC AUC, and confusion matrix
     """
     
     model.fit(X_train, y_train)
     return evaluate(model, X_test, y_test, verbose, float_precision)
 
-def evaluate(model, X_test, y_test, verbose=False, float_precision=3):
+def evaluate(model, X_test, y_test, verbose=False, float_precision=4):
     """
     Evaluates a model on the given data and returns the accuracy, precision, recall, F1, ROC AUC, and confusion matrix.
     
