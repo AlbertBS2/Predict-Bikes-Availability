@@ -8,16 +8,16 @@ import matplotlib.pyplot as plt
 
 def find_optimal_hyperparameters(model, param_grid, X_train, y_train, cv=5, scoring='accuracy', n_jobs=-1, save_dir="", save_file='knn_best_params.npy'):
 
-    knn_gscv = GridSearchCV(model, param_grid, cv=cv, scoring=scoring, n_jobs=n_jobs)
-    knn_gscv.fit(X_train, y_train)
+    gs_cv = GridSearchCV(model, param_grid, cv=cv, scoring=scoring, n_jobs=n_jobs)
+    gs_cv.fit(X_train, y_train)
 
-    print("Best parameters found: ", knn_gscv.best_params_)
+    print("Best parameters found: ", gs_cv.best_params_)
 
     if save_dir:
         print("Saving best parameters to '{}'".format(os.path.join(save_dir, save_file).replace('\\', '/').strip()))
-        np.save(os.path.join(save_dir, save_file), knn_gscv.best_params_)
+        np.save(os.path.join(save_dir, save_file), gs_cv.best_params_)
     
-    return knn_gscv.best_params_
+    return gs_cv.best_params_
 
 
 def load_model_from_numpy(model, numpy_file, random_state=False):
