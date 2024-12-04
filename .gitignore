@@ -1,3 +1,5 @@
 # Ignore catboost_info folder
 catboost_info/
+
+# Ignore __pycache__ folder
 __pycache__/
