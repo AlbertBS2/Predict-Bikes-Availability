@@ -20,23 +20,21 @@ def find_optimal_hyperparameters(model, param_grid, X_train, y_train, cv=5, scor
     return gs_cv.best_params_
 
 
-def load_model_from_numpy(model, numpy_file, random_state=False):
+def load_model_from_numpy(model, numpy_file, extra_parms={}):
     """
     Load a model from a numpy file
     
     Parameters:
     model: The model class to load
     numpy_file (str): The path to the numpy file containing the model parameters
-    random_state (int): The random state to use when creating the model (if applicable)
+    extra_parms (dict): Extra parameters to pass to the model
 
     Returns:
     model: The model loaded from the numpy file
     """
     params = np.load(numpy_file, allow_pickle=True).item()
-    if random_state:
-        model = model(**params, random_state=random_state)
-    else:
-        model = model(**params)
+    model = model(**params, **extra_parms)
+
     return model
 
 def plot_roc_curves(results):
