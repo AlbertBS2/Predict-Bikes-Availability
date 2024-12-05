@@ -129,7 +129,7 @@ def fit_and_evaluate(model, X_train, y_train, X_test, y_test, verbose=False, flo
         dict: The accuracy, precision, recall, F1, ROC AUC, confusion matrix, fpr, tpr
     """
     
-    model.fit(X_train, y_train)
+    model.fit(X_train, y_train, verbose=verbose)
     return evaluate(model, X_test, y_test, verbose, float_precision)
 
 def evaluate(model, X_test, y_test, verbose=False, float_precision=4):
