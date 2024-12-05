@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
 
-def load_and_split_data(filepath, c, target_column, class_zero, convert_cat_target=False, test_size=0.2, random_state=0, delimiter=','):
+def load_and_split_data(filepath, target_column, class_zero, convert_cat_target=False, test_size=0.2, random_state=0, delimiter=','):
     """
     Loads data from a CSV file, processes it, and returns train-test splits.
 
