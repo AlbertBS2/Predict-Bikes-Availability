@@ -10,41 +10,74 @@ import numpy as np
 
 
 
-def find_optimal_hyperparameters(model, param_grid, X_train, y_train, cv=5, scoring='accuracy', n_jobs=-1, save_dir="", save_file='knn_best_params.json'):
+def find_optimal_hyperparameters(model, param_grid, X_train, y_train, cv=5, scoring='accuracy', n_jobs=-1, save_dir="", save_file='knn_best_params.json', extra_args={}):
 
+    """
+    Find the optimal hyperparameters for a model using GridSearchCV
+    
+    Parameters:
+        model: The model class
+        param_grid (dict): The hyperparameters to search over
+        X_train (pd.DataFrame): The training data
+        y_train (pd.Series): The training labels
+        cv (int): The number of cross-validation folds
+        scoring (str): The scoring metric
+        n_jobs (int): The number of jobs to run in parallel
+        save_dir (str): The directory to save the best parameters
+        save_file (str): The file to save the best parameters
+        extra_args (dict): Extra arguments to pass to the model
+
+    Returns:
+        dict: The best hyperparameters found
+    """
+    
+    model = model(**extra_args)
     gs_cv = GridSearchCV(model, param_grid, cv=cv, scoring=scoring, n_jobs=n_jobs)
     gs_cv.fit(X_train, y_train)
 
-    print("Best parameters found: ", gs_cv.best_params_)
+    best_params = gs_cv.best_params_
+    print("Best parameters found: ", best_params)
 
+    if extra_args:
+        best_params.update(extra_args)
+    
     if save_dir:
         print("Saving best parameters to '{}'".format(os.path.join(save_dir, save_file).replace('\\', '/').strip()))
         with open(os.path.join(save_dir, save_file), 'w') as f:
-            json.dump(gs_cv.best_params_, f)
+            json.dump(best_params, f)
     
-    return gs_cv.best_params_
+    return best_params
 
 
-def load_model_from_json(model, json_file, extra_parms={}):
+def load_model_from_json(model, json_file):
     """
     Load a model from a json file
     
     Parameters:
-    model: The model class to load
-    json_file (str): The path to the json file
-    extra_parms (dict): Extra parameters to pass to the model
+        model: The model class to load
+        json_file (str): The path to the json file
 
     Returns:
-    model: The model loaded from the json file
+        model: The model loaded from the json file
     """
+
     with open(json_file, 'r') as f:
         params = json.load(f)
 
-    model = model(**params, **extra_parms)
+    model = model(**params)
 
     return model
 
 def plot_roc_curves(results):
+    """
+    Plot the ROC curves for the models
+    
+    Parameters:
+        results (dict): The results from fit_and_evaluate_multiple
+    
+    Preconditions:
+        - results contains the fpr and tpr for each model, as well as the roc_auc
+    """
     plt.figure(figsize=(10, 7))
     for model_name, metrics in results.items():
         plt.plot(metrics["fpr"], metrics["tpr"], label=f"{model_name} (AUC = {metrics['roc_auc']:.3f})")
