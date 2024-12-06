@@ -10,7 +10,7 @@ import numpy as np
 
 
 
-def find_optimal_hyperparameters(model, param_grid, X_train, y_train, cv=5, scoring='accuracy', n_jobs=-1, save_dir="", save_file='knn_best_params.json', extra_args={}, verbose=True):
+def find_optimal_hyperparameters(model, param_grid, X_train, y_train, cv=5, scoring='accuracy', n_jobs=-1, save_dir="", save_file='knn_best_params.json', extra_args={}, verbose_training=False):
 
     """
     Find the optimal hyperparameters for a model using GridSearchCV
@@ -33,7 +33,11 @@ def find_optimal_hyperparameters(model, param_grid, X_train, y_train, cv=5, scor
     
     model = model(**extra_args)
     gs_cv = GridSearchCV(model, param_grid, cv=cv, scoring=scoring, n_jobs=n_jobs)
-    gs_cv.fit(X_train, y_train, verbose=verbose)
+
+    if 'CatBoostClassifier' in str(model):
+        gs_cv.fit(X_train, y_train, verbose=verbose_training)
+    else:
+        gs_cv.fit(X_train, y_train)
 
     best_params = gs_cv.best_params_
     print("Best parameters found: ", best_params)
