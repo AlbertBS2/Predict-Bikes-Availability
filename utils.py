@@ -90,7 +90,7 @@ def plot_roc_curves(results):
     plt.grid()
     plt.show()
 
-def fit_and_evaluate_multiple(models, X_train, y_train, X_test, y_test, verbose=False, float_precision=4):
+def fit_and_evaluate_multiple(models, X_train, y_train, X_test, y_test, verbose=False, verbose_training=False, float_precision=4):
     """
     Fits multiple models on the given data and evaluates them on the testing data.
     
@@ -109,10 +109,10 @@ def fit_and_evaluate_multiple(models, X_train, y_train, X_test, y_test, verbose=
     
     results = {}
     for model in models:
-        results[model.__class__.__name__] = fit_and_evaluate(model, X_train, y_train, X_test, y_test, verbose, float_precision)
+        results[model.__class__.__name__] = fit_and_evaluate(model, X_train, y_train, X_test, y_test, verbose, verbose_training, float_precision)
     return results
 
-def fit_and_evaluate(model, X_train, y_train, X_test, y_test, verbose=False, float_precision=4):
+def fit_and_evaluate(model, X_train, y_train, X_test, y_test, verbose=False, verbose_training=False, float_precision=4):
     """
     Fits a model on the given data and evaluates it on the testing data.
     
@@ -129,7 +129,10 @@ def fit_and_evaluate(model, X_train, y_train, X_test, y_test, verbose=False, flo
         dict: The accuracy, precision, recall, F1, ROC AUC, confusion matrix, fpr, tpr
     """
     
-    model.fit(X_train, y_train)
+    if 'CatBoostClassifier' in str(model):
+        model.fit(X_train, y_train, verbose=verbose_training)
+    else:
+        model.fit(X_train, y_train)
     return evaluate(model, X_test, y_test, verbose, float_precision)
 
 def evaluate(model, X_test, y_test, verbose=False, float_precision=4):
