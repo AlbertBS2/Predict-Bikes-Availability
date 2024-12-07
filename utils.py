@@ -157,9 +157,9 @@ def evaluate(model, X_test, y_test, verbose=False, float_precision=4):
     y_pred_prob = model.predict_proba(X_test)[:, 1]
 
     acc = accuracy_score(y_test, y_pred)
-    precision = precision_score(y_test, y_pred)
-    recall = recall_score(y_test, y_pred)
-    f1 = f1_score(y_test, y_pred)
+    precision = precision_score(y_test, y_pred, zero_division=0)
+    recall = recall_score(y_test, y_pred, zero_division=0)
+    f1 = f1_score(y_test, y_pred, zero_division=0)
     roc_auc = roc_auc_score(y_test, y_pred_prob)
     cm = confusion_matrix(y_test, y_pred)
     fpr, tpr, _ = roc_curve(y_test, y_pred_prob)
