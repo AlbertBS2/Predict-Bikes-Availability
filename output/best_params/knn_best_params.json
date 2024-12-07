@@ -1,1 +1,1 @@
-{"algorithm": "ball_tree", "metric": "manhattan", "n_neighbors": 21, "weights": "distance"}
+{"algorithm": "ball_tree", "metric": "manhattan", "n_neighbors": 23, "weights": "uniform"}
