@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
 
-def load_and_split_data(filepath, target_column, class_zero, convert_cat_target=False, test_size=0.2, random_state=0, delimiter=','):
+def load_and_split_data(filepath, target_column, class_zero, test_size=0.2, random_state=0, cat_features=None):
     """
     Loads data from a CSV file, processes it, and returns train-test splits.
 
@@ -19,12 +19,15 @@ def load_and_split_data(filepath, target_column, class_zero, convert_cat_target=
         tuple: X_train, X_test, y_train, y_test
     """
 
-    df = pd.read_csv(filepath, delimiter=delimiter)
+    df = pd.read_csv(filepath)
 
-    if convert_cat_target:
-        # Assign 0 to the class_zero and 1 to the other class in the target column
-        df[target_column] = np.where(df[target_column] == class_zero, 0, 1)
+    # Assign 0 to the class_zero and 1 to the other class in the target column
+    df[target_column] = np.where(df[target_column] == class_zero, 0, 1)
     
+    if cat_features:
+        for feature in cat_features:
+            df[feature] = df[feature].astype('category')
+
     # Split into features and target
     X = df.copy()
     y = X.pop(target_column)
