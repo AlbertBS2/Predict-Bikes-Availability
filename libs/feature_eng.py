@@ -2,17 +2,6 @@
 
 import pandas as pd
 
-################################################### VARIABLES ###################################################
-
-# Path to the dataset
-path_train = "data/training_data_fall2024.csv"
-path_test = "data/test_data_fall2024.csv"
-
-# Path to save the preprocessed dataset
-path_out = "data/"
-name_out_train = "training_data_preprocessed.csv"
-name_out_test = "test_data_preprocessed.csv"
-
 
 ################################################### FUNCTIONS ###################################################
 
@@ -64,6 +53,16 @@ def preprocess(path_in, path_out, name_out):
 
 # Execute only if the script is run directly
 if __name__ == "__main__":
+    
+    # Path to the dataset
+    path_train = "data/training_data_fall2024.csv"
+    path_test = "data/test_data_fall2024.csv"
+
+    # Path to save the preprocessed dataset
+    path_out = "data/"
+    name_out_train = "training_data_preprocessed.csv"
+    name_out_test = "test_data_preprocessed.csv"
+
     # Select which dataset to preprocess
     while True:
         try:
