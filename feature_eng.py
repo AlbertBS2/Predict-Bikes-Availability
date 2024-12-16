@@ -59,25 +59,28 @@ def preprocess(path_in, path_out, name_out):
 
     return data
 
+
 ################################################### MAIN ###################################################
 
-# Select which dataset to preprocess
-while True:
-    try:
-        selector = input("Which dataset do you want to preprocess? (train/test/both): ")
-        assert selector in ["train", "test", "both"]
-        break
-    except AssertionError:
-        print("Invalid input. Please enter 'train', 'test' or 'both'.")
+# Execute only if the script is run directly
+if __name__ == "__main__":
+    # Select which dataset to preprocess
+    while True:
+        try:
+            selector = input("Which dataset do you want to preprocess? (train/test/both): ")
+            assert selector in ["train", "test", "both"]
+            break
+        except AssertionError:
+            print("Invalid input. Please enter 'train', 'test' or 'both'.")
 
-# Preprocess the training dataset
-if selector == "train":
-    preprocess(path_train, path_out, name_out_train)
+    # Preprocess the training dataset
+    if selector == "train":
+        preprocess(path_train, path_out, name_out_train)
 
-# Preprocess the test dataset
-elif selector == "test":
-    preprocess(path_test, path_out, name_out_test)
+    # Preprocess the test dataset
+    elif selector == "test":
+        preprocess(path_test, path_out, name_out_test)
 
-elif selector == "both":
-    preprocess(path_train, path_out, name_out_train)
-    preprocess(path_test, path_out, name_out_test)
+    elif selector == "both":
+        preprocess(path_train, path_out, name_out_train)
+        preprocess(path_test, path_out, name_out_test)
