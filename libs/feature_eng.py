@@ -13,9 +13,6 @@ def preprocess(path_in, path_out, name_out):
         path_in (str): path to the dataset
         path_out (str): path to save the preprocessed dataset
         name_out (str): name for the preprocessed dataset
-
-    Returns:
-        df (pd.DataFrame): preprocessed dataset
     """
 
     # Load the dataset
@@ -46,14 +43,12 @@ def preprocess(path_in, path_out, name_out):
     # Save the preprocessed dataset as csv
     data.to_csv(path_out + name_out, index=False)
 
-    return data
-
 
 ################################################### MAIN ###################################################
 
 # Execute only if the script is run directly
 if __name__ == "__main__":
-    
+
     # Path to the dataset
     path_train = "data/training_data_fall2024.csv"
     path_test = "data/test_data_fall2024.csv"
