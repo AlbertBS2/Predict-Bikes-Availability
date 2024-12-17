@@ -1,11 +1,11 @@
 
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, confusion_matrix, roc_curve
 from sklearn.model_selection import GridSearchCV
-import numpy as np
 import json
 import os
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 
 
 
@@ -186,3 +186,42 @@ def evaluate(model, X_test, y_test, verbose=False, float_precision=4):
     }
 
     return results_dict
+
+
+def fit_and_save_predictions(model, training_data, X_eval, target_column, class_zero):
+    """
+    Fits a model on the given data and saves the predictions on the evaluation data.
+    
+    Parameters:
+        model: The model
+        training_data (csv): Path to the training data
+        X_eval (csv): Path to the evaluation data
+        target_column (str): The name of the target column to be predicted
+        class_zero (str): The name of the class to be used as the reference class (0)
+    """
+
+    # Load training data
+    training_data = pd.read_csv(training_data)
+
+    # Assign 0 to the class_zero and 1 to the other class in the target column
+    training_data[target_column] = np.where(training_data[target_column] == class_zero, 0, 1)
+
+    # Split training data into features and target
+    X_train = training_data.copy()
+    y_train = X_train.pop(target_column)
+
+    # Load evaluation data
+    X_eval = pd.read_csv(X_eval)
+
+    # Fit the model on the training data
+    model.fit(X_train, y_train)
+
+    # Compute the predictions on the evaluation data
+    y_pred = model.predict(X_eval)
+
+    # Reshape the predictions to a single row
+    y_pred_row = np.reshape(y_pred, (1, -1))
+    
+    # Save the predictions to a CSV file
+    y_pred_df = pd.DataFrame(y_pred_row)
+    y_pred_df.to_csv("data/final_predictions.csv", header=False, index=False)
