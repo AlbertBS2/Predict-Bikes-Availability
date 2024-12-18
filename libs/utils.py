@@ -26,6 +26,7 @@ def find_optimal_hyperparameters(model, param_grid, X_train, y_train, cv=5, scor
         save_dir (str): The directory to save the best parameters
         save_file (str): The file to save the best parameters
         extra_args (dict): Extra arguments to pass to the model
+        verbose_training (bool): Whether to print the training progress
 
     Returns:
         dict: The best hyperparameters found
@@ -105,6 +106,7 @@ def fit_and_evaluate_multiple(models, X_train, y_train, X_test, y_test, verbose=
         X_test (pd.DataFrame): The testing data
         y_test (pd.Series): The testing labels
         verbose (bool): Whether to print the results
+        verbose_training (bool): Whether to print the training progress
         float_precision (int): The number of decimal places to print
 
     Returns:
@@ -127,6 +129,7 @@ def fit_and_evaluate(model, X_train, y_train, X_test, y_test, verbose=False, ver
         X_test (pd.DataFrame): The testing data
         y_test (pd.Series): The testing labels
         verbose (bool): Whether to print the results
+        verbose_training (bool): Whether to print the training progress
         float_precision (int): The number of decimal places to print
 
     Returns:

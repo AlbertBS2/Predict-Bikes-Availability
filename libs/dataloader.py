@@ -13,7 +13,7 @@ def load_and_split_data(filepath, target_column, class_zero, test_size=0.2, rand
         convert_cat_target (bool): Whether to convert the target column to binary.
         test_size (float): Fraction of the data to use as test set.
         random_state (int): Random seed for reproducibility.
-        delimiter (str): The delimiter used in the CSV file.
+        cat_features (list): List of categorical features to be converted to category type.
 
     Returns:
         tuple: X_train, X_test, y_train, y_test
