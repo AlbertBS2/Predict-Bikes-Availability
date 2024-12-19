@@ -4,5 +4,6 @@ catboost_info/
 # Ignore __pycache__ folder
 __pycache__/
 
-# Ignore instructions file
+# Ignore instructions and report files
 SML_project_2024fall-1.pdf
+Statistical_ML_Project.pdf
