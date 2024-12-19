@@ -14,16 +14,16 @@
 Follow these steps to reproduce the results:
 
 1. **Install Dependencies**  
-   Ensure you have the required libraries by installing them from `requirements.txt`.
+   - Ensure you have the required libraries by installing them from `requirements.txt`.
 
 2. **Data Analysis**
-   Open `data_analysis.ipynb`.
-   Run all cells to view the results and graphs.
+   - Open `data_analysis.ipynb`.
+   - Run all cells to view the results and graphs.
 
 3. **Model Training and Optimization**
-   Open each notebook in the `models/` directory.
-   Run all cells in each notebook. The optimal parameters for each model will be saved in the `models/best_params/` directory.
+   - Open each notebook in the `models/` directory.
+   - Run all cells in each notebook. The optimal parameters for each model will be saved in the `models/best_params/` directory.
 
 4. **Final Results**
-   Open `main.ipynb`.
-   Run all cells to see the final results and graphs.
+   - Open `main.ipynb`.
+   - Run all cells to see the final results and graphs.
