@@ -1,5 +1,5 @@
 ## Abstract
-This project explores different machine learning models for predicting whether there will be a low or high demand on shared bicycles in Washington DC. The explored models include Logistic Regression, K-nearest neighbors, Random forest, XGBoost and CatBoost. Hyperparameter tuning was done on all the models and after evaluating them on a test-set with recall as focus metric, random forest was deemed the winner. The random forest model achieved a recall score of 64% and overall accuracy of 88%. The Random Forest model was used to predict on the final test set.
+This project explores different machine learning models for predicting whether there will be a low or high demand on shared bicycles in Washington DC. The explored models include Logistic Regression, K-nearest neighbors, Random forest, XGBoost and CatBoost. Hyperparameter tuning was done on all the models and after evaluating them on a validation-set with recall as focus metric, random forest was deemed the winner. The random forest model achieved a recall score of 64% and overall accuracy of 88%. The Random Forest model was used to obtain predictions on the final unseen test set.
 
 ## Directory Structure
 
