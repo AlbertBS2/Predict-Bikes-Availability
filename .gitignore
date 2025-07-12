@@ -7,3 +7,6 @@ __pycache__/
 # Ignore instructions and report files
 SML_project_2024fall-1.pdf
 Statistical_ML_Project.pdf
+
+# Ignore .venv
+.venv/
