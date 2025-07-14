@@ -1,9 +1,9 @@
 # Frontend code for the Streamlit app
 import streamlit as st
 import pandas as pd
-import numpy as np
 import datetime
 from joblib import load
+from libs.feature_eng import preprocess_input_streamlit
 
 
 st.title("Do we need more bikes in Washington DC?")
@@ -11,6 +11,7 @@ st.title("Do we need more bikes in Washington DC?")
 # Load the pre-trained model
 rf_model = load("output/trained_rf.joblib")
 
+## Features selection
 # Month selector
 with st.expander("Month"):
     months_list = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
@@ -67,47 +68,19 @@ input_data = pd.DataFrame({
 })
 
 
-def preprocess(df):
-    """
-    Preprocess the dataset and returns a preprocessed DataFrame.
+if st.button("Predict"):
 
-    Args:
-        df (DataFrame): DataFrame to preprocess
+    # Preprocess the input data
+    preprocessed_df = preprocess_input_streamlit(input_data)
 
-    Returns:
-        DataFrame: Preprocessed DataFrame
-    """
-
-    # Define the numerical features
-    num_features = ['temp', 'dew', 'humidity', 'windspeed', 'cloudcover', 'visibility']
-
-    # Add a binary feature called "day" where 1 means "hour_of_day" is between 7 and 20, and 0 otherwise
-    df['day'] = ((df['hour_of_day'] >= 7) & (df['hour_of_day'] <= 20)).astype(int)
-
-    # Add a binary feature called "rain" where 1 means if "precip" is greater than 0, and 0 otherwise
-    df['rain'] = (df['precip'] > 0).astype(int)
-
-    # Drop "precip" column
-    df = df.drop(columns=['precip'])
-
-    # Normalize the numerical features
-    for feature in num_features:
-        df[feature] = (df[feature] - df[feature].mean()) / df[feature].std()
-
-    return df
-
-# Preprocess the input data
-preprocessed_df = preprocess(input_data)
-
-# Make predictions
-prediction = rf_model.predict(preprocessed_df)
-predict_proba = rf_model.predict_proba(preprocessed_df)
-
-st.write(prediction)
-st.write(predict_proba)
-
-st.subheader("Prediction")
-if prediction[0] == 0:
-    st.write("Low bike demand")
-else:
-    st.write("High bike demand")
+    # Make prediction
+    prediction = rf_model.predict(preprocessed_df)
+    predict_proba = rf_model.predict_proba(preprocessed_df)
+    proba_0, proba_1 = predict_proba[0]    
+    
+    # Display prediction
+    st.subheader("Prediction")
+    if prediction[0] == 0:
+        st.write(f"Low bike demand ({(proba_0 * 100):.2f}%)")
+    else:
+        st.write(f"High bike demand ({(proba_1 * 100):.2f}%)")
