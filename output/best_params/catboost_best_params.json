@@ -1,1 +1,0 @@
-{"depth": 6, "iterations": 1000, "learning_rate": 0.01, "cat_features": ["hour_of_day", "day_of_week", "month", "weekday", "summertime", "snowdepth", "day", "rain"], "random_seed": 0}

@@ -3,9 +3,9 @@ WORKDIR /app
 
 COPY requirements.txt .
 COPY app.py .
-COPY libs/ ./libs/
+COPY utils/ ./utils/
 COPY data/ ./data/
-COPY output/ ./output/
+COPY model/ ./model/
 
 RUN pip install --no-cache-dir -r requirements.txt
 
