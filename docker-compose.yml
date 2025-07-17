@@ -1,10 +1,20 @@
 version: "3.10"
 
 services:
-  streamlit:
+  api:
     build:
       context: .
-      dockerfile: Dockerfile.streamlit
-    container_name: streamlit_app
+      dockerfile: Dockerfile.api
+    container_name: api-service
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: frontend-service
     ports:
       - "8501:8501"
+    depends_on:
+      - api
