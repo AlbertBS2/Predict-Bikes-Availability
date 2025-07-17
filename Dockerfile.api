@@ -1,2 +1,10 @@
 FROM python:3.10
 WORKDIR /
+
+COPY app/api/requirements-api.txt ./requirements.txt
+COPY app/api/ ./app/api/
+COPY app/model/ ./app/model/
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+CMD ["uvicorn", "app.api.main:app", "--host", "0.0.0.0", "--port", "80"]

@@ -1,14 +1,11 @@
 FROM python:3.10
 WORKDIR /
 
-COPY requirements.txt .
+COPY app/requirements-frontend.txt ./requirements.txt
 COPY app/app.py ./app/app.py
-COPY app/utils/ ./app/utils/
-COPY app/data/ ./app/data/
-COPY app/model/ ./app/model/
 
 RUN pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 8501
 
-CMD ["streamlit", "run", "./app/app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+CMD ["streamlit", "run", "app/app.py", "--server.port=8501", "--server.address=0.0.0.0"]
