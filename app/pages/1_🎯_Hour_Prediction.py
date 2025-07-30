@@ -60,19 +60,19 @@ visibility = st.number_input("Visibility", value=visibility, disabled=True)
 
 # Create a dictionary with the input data
 input_data = {
-    "hour_of_day": hour_of_day,
-    "day_of_week": day_of_week,
-    "month": month,
-    "weekday": 1 if day_of_week < 5 else 0,
-    "summertime": 1 if month in [5, 6, 7, 8] else 0,
-    "temp": temp,
-    "dew": dew,
-    "humidity": humidity,
-    "precip": 1 if precip else 0,
-    "snowdepth": 1 if snowdepth else 0,
-    "windspeed": windspeed,
-    "cloudcover": cloudcover,
-    "visibility": visibility
+    "hour_of_day": [hour_of_day],
+    "day_of_week": [day_of_week],
+    "month": [month],
+    "weekday": [1 if day_of_week < 5 else 0],
+    "summertime": [1 if month in [5, 6, 7, 8] else 0],
+    "temp": [temp],
+    "dew": [dew],
+    "humidity": [humidity],
+    "precip": [1 if precip else 0],
+    "snowdepth": [1 if snowdepth else 0],
+    "windspeed": [windspeed],
+    "cloudcover": [cloudcover],
+    "visibility": [visibility]
 }
 
 if st.button("Predict"):
@@ -80,8 +80,8 @@ if st.button("Predict"):
     # Send a POST request to the model API endpoint to obtain the prediction
     response = requests.post("http://localhost:80/predict", json=input_data) # If running without Docker
     #response = requests.post("http://ml-api:80/predict", json=input_data) # If running with Docker
-    prediction = response.json()["prediction"]
-    proba_0, proba_1 = response.json()["predict_proba"]
+    prediction = response.json()["prediction"][0]
+    proba_0, proba_1 = response.json()["predict_proba"][0]
     
     # Display prediction
     st.subheader("Prediction")
