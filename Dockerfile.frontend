@@ -3,6 +3,7 @@ WORKDIR /
 
 COPY app/requirements-frontend.txt ./requirements.txt
 COPY app/Bikes_Availability_Predictor.py ./app/Bikes_Availability_Predictor.py
+COPY app/pages/ ./app/pages/
 
 RUN pip install --no-cache-dir -r requirements.txt
 
