@@ -13,7 +13,7 @@ def preprocess_input_streamlit(data: dict) -> pd.DataFrame:
     """
 
     # Convert input data dict to df
-    df = pd.DataFrame([data])
+    df = pd.DataFrame(data)
 
     # Define the numerical features
     num_features = ['temp', 'dew', 'humidity', 'windspeed', 'cloudcover', 'visibility']

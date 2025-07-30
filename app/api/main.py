@@ -25,8 +25,8 @@ def predict(data: dict) -> dict:
     predict_proba = model.predict_proba(input_data)
     
     return {
-        "prediction": int(prediction[0]),
-        "predict_proba": predict_proba[0].tolist()
+        "prediction": prediction.tolist(),
+        "predict_proba": predict_proba.tolist()
     }
 
 
