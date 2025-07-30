@@ -5,13 +5,11 @@ import requests
 import openmeteo_requests
 
 
-st.title("Do we need more bikes in Washington DC?")
+st.title("Spot prediction")
 
 ## Feature inputs
 day = st.date_input("Day")
-
 day_of_week = day.weekday()
-
 month = day.month
 
 hour_of_day = st.slider(
@@ -78,8 +76,9 @@ input_data = {
 if st.button("Predict"):
 
     # Send a POST request to the model API endpoint to obtain the prediction
-    response = requests.post("http://localhost:80/predict", json=input_data) # If running without Docker
-    #response = requests.post("http://ml-api:80/predict", json=input_data) # If running with Docker
+    #response = requests.post("http://localhost:80/predict", json=input_data) # If running without Docker
+    response = requests.post("http://ml-api:80/predict", json=input_data) # If running with Docker
+
     prediction = response.json()["prediction"][0]
     proba_0, proba_1 = response.json()["predict_proba"][0]
     

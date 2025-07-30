@@ -6,13 +6,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-st.title("Do we need more bikes in Washington DC?")
+st.title("Full Day Forecast")
 
 # Feature inputs
 day = st.date_input("Day")
-
 day_of_week = day.weekday()
-
 month = day.month
 
 # Setup the Open-Meteo API client
