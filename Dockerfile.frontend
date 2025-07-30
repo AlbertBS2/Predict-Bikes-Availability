@@ -2,10 +2,10 @@ FROM python:3.10
 WORKDIR /
 
 COPY app/requirements-frontend.txt ./requirements.txt
-COPY app/app.py ./app/app.py
+COPY app/Bikes_Availability_Predictor.py ./app/Bikes_Availability_Predictor.py
 
 RUN pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 8501
 
-CMD ["streamlit", "run", "app/app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+CMD ["streamlit", "run", "app/Bikes_Availability_Predictor.py", "--server.port=8501", "--server.address=0.0.0.0"]
