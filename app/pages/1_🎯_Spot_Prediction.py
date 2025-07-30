@@ -5,7 +5,12 @@ import requests
 import openmeteo_requests
 
 
-st.title("Spot prediction")
+st.set_page_config(
+    page_title="Spot Prediction",
+    page_icon="🎯",
+)
+
+st.title("Spot Prediction of Bikes Availability in Washington DC")
 
 ## Feature inputs
 day = st.date_input("Day")

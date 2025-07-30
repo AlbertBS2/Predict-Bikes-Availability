@@ -6,7 +6,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-st.title("Full Day Forecast")
+st.set_page_config(
+    page_title="Full Day Forecast",
+    page_icon="📈",
+)
+
+st.title("Full Day Forecast of Bikes Availability in Washington DC")
 
 # Feature inputs
 day = st.date_input("Day")
