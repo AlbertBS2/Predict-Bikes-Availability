@@ -1,9 +1,9 @@
 # Frontend code for the Streamlit app
 import streamlit as st
-import datetime
 import requests
 import openmeteo_requests
 import pandas as pd
+import matplotlib.pyplot as plt
 
 
 st.title("Do we need more bikes in Washington DC?")
@@ -62,15 +62,38 @@ input_data = {
 if st.button("Predict"):
 
     # Send a POST request to the model API endpoint to obtain the prediction
-    response = requests.post("http://localhost:80/predict", json=input_data) # If running without Docker
-    #response = requests.post("http://ml-api:80/predict", json=input_data) # If running with Docker
+    #response = requests.post("http://localhost:80/predict", json=input_data) # If running without Docker
+    response = requests.post("http://ml-api:80/predict", json=input_data) # If running with Docker
 
     predictions = response.json()["prediction"]
     probabilities = response.json()["predict_proba"]
-    
-    # Display prediction
-    st.subheader("Prediction")
-    
+
+    # Plot probability of high bike demand against hour of the day
+    hours = range(24)
+    high_prob_values = [proba[1] for proba in probabilities]
+
+    fig, ax = plt.subplots()
+    ax.plot( 
+        hours,
+        high_prob_values
+    )
+
+    ax.fill_between(
+        hours,
+        high_prob_values,
+        color='skyblue',
+        alpha=0.5
+    )
+
+    ax.axhline(0.5, color='gray', linestyle='--', linewidth=0.5)
+
+    ax.set_title("Probability of High Bike Demand by Hour")
+    ax.set_xlabel("Hour of the Day")
+    ax.set_ylabel("Probability of High Bike Demand (%)")
+
+    st.pyplot(fig)
+
+    # Display prediction in a table
     df_pred = pd.DataFrame({
         "Hour": [f"{i}:00" for i in range(24)],
         "Prediction": predictions,
@@ -78,13 +101,3 @@ if st.button("Predict"):
     })
 
     st.dataframe(df_pred, hide_index=True)
-
-
-
-    # if prediction == 0:
-    #     st.write(f"Low bike demand ({(proba_0 * 100):.2f}%)")
-    # else:
-    #     st.write(f"High bike demand ({(proba_1 * 100):.2f}%)")
-
-
-
