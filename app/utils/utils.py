@@ -6,6 +6,7 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import joblib
 
 
 
@@ -228,3 +229,43 @@ def fit_and_save_predictions(model, training_data, X_eval, target_column, class_
     # Save the predictions to a CSV file
     y_pred_df = pd.DataFrame(y_pred_row)
     y_pred_df.to_csv("data/final_predictions.csv", header=False, index=False)
+
+
+def fit_and_save_model(model, training_data, scaler_stats, target_column, class_zero, out_path):
+    """
+    Fits a model on the given data and saves the predictions on the evaluation data.
+    
+    Parameters:
+        model: The model
+        training_data (csv): Path to the training data
+        scaler_stats (json): Path to the scaler stats
+        target_column (str): The name of the target column to be predicted
+        class_zero (str): The name of the class to be used as the reference class (0)
+        out_path (str): The path to save the trained model
+    """
+
+    # Load scaler stats
+    with open(scaler_stats, 'r') as f:
+        scaler_stats = json.load(f)
+
+    # Load training data
+    training_data = pd.read_csv(training_data)
+
+    # Assign 0 to the class_zero and 1 to the other class in the target column
+    training_data[target_column] = np.where(training_data[target_column] == class_zero, 0, 1)
+
+    # Split training data into features and target
+    X_train = training_data.copy()
+    y_train = X_train.pop(target_column)
+
+    # Fit the model on the training data
+    model.fit(X_train, y_train)
+
+    # Save the model
+    joblib.dump(
+        {
+            'model': model,
+            'scaler_stats': scaler_stats
+        },
+        out_path
+    )

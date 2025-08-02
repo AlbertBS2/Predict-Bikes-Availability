@@ -1,6 +1,7 @@
 # Preprocess the dataset
 
 import pandas as pd
+import json
 
 
 ################################################### FUNCTIONS ###################################################
@@ -36,9 +37,24 @@ def preprocess(path_in, path_out, name_out):
     # Drop "precip" column
     data = data.drop(columns=['precip'])
 
-    # Normalize the numerical features
+    # Compute scaler stats
+    scaler_stats = {
+        feature: {
+            'mean': data[feature].mean(),
+            'std': data[feature].std()
+        }
+        for feature in num_features
+    }
+
+    # Save scaler stats to JSON or joblib
+    with open(path_out + 'scaler_stats.json', 'w') as f:
+        json.dump(scaler_stats, f)
+
+    # Apply normalization
     for feature in num_features:
-        data[feature] = (data[feature] - data[feature].mean()) / data[feature].std()
+        mean = scaler_stats[feature]['mean']
+        std = scaler_stats[feature]['std']
+        data[feature] = (data[feature] - mean) / std
 
     # Save the preprocessed dataset as csv
     data.to_csv(path_out + name_out, index=False)
