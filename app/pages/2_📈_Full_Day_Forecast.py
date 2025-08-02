@@ -78,7 +78,8 @@ if st.button("Predict"):
     fig, ax = plt.subplots()
     ax.plot( 
         hours,
-        high_prob_values
+        high_prob_values,
+        marker='o'
     )
 
     ax.fill_between(
