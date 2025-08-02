@@ -9,12 +9,12 @@ model = load_model_from_json(RandomForestClassifier, "app/model/best_params/rf_b
 preprocess(
     path_in="app/data/training_data_fall2024.csv",
     path_out="app/data/",
-    name_out="training_data_preprocessed_2.csv",
+    name_out="training_data_preprocessed.csv",
 )
 
 fit_and_save_model(
     model=model,
-    training_data="app/data/training_data_preprocessed_2.csv",
+    training_data="app/data/training_data_preprocessed.csv",
     scaler_stats="app/data/scaler_stats.json",
     target_column="increase_stock",
     class_zero='low_bike_demand',
