@@ -18,5 +18,5 @@ fit_and_save_model(
     scaler_stats="app/data/scaler_stats.json",
     target_column="increase_stock",
     class_zero='low_bike_demand',
-    out_path="app/model/rf_model.pkl"
+    out_path="app/model/rf_model.joblib"
 )
