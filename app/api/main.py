@@ -3,12 +3,14 @@ import joblib
 from app.api.api_utils import preprocess_input_streamlit
 
 
-model_path = "app/model/trained_rf.joblib"
+model_path = "app/model/rf_model.joblib"
 
 app = FastAPI()
 
 # Load the pre-trained model
-model= joblib.load(model_path)
+model_package = joblib.load(model_path)
+model = model_package['model']
+scaler_stats = model_package['scaler_stats']
 
 @app.get("/")
 def index():
@@ -18,7 +20,7 @@ def index():
 def predict(data: dict) -> dict:
 
     # Preprocess the input data
-    input_data = preprocess_input_streamlit(data)
+    input_data = preprocess_input_streamlit(data, scaler_stats)
     
     # Make prediction
     prediction = model.predict(input_data)

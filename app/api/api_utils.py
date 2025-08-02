@@ -1,12 +1,14 @@
 import pandas as pd
+import json
 
 
-def preprocess_input_streamlit(data: dict) -> pd.DataFrame:
+def preprocess_input_streamlit(data: dict, scaler_stats: dict) -> pd.DataFrame:
     """
     Takes the input dataset and returns a preprocessed DataFrame.
 
     Args:
         data (dict): Data to preprocess
+        scaler_stats (dict): Dictionary containing mean and std for normalization
 
     Returns:
         DataFrame: Preprocessed DataFrame
@@ -29,6 +31,7 @@ def preprocess_input_streamlit(data: dict) -> pd.DataFrame:
 
     # Normalize the numerical features
     for feature in num_features:
-        df[feature] = (df[feature] - df[feature].mean()) / df[feature].std()
+        stats = scaler_stats[feature]
+        df[feature] = (df[feature] - stats['mean']) / stats['std']
 
     return df
