@@ -1,5 +1,4 @@
 import pandas as pd
-import json
 
 
 def preprocess_input_streamlit(data: dict, scaler_stats: dict) -> pd.DataFrame:
