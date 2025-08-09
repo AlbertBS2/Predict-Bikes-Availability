@@ -1,18 +1,103 @@
-
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, confusion_matrix, roc_curve
-from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import GridSearchCV, train_test_split
 import json
 import os
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import joblib
 
 
+def preprocess(path_in, path_out, name_out):
+    """
+    Preprocess the dataset and saves it as a csv file.
+
+    Args:
+        path_in (str): path to the dataset
+        path_out (str): path to save the preprocessed dataset
+        name_out (str): name for the preprocessed dataset
+    """
+
+    # Load the dataset
+    data = pd.read_csv(path_in)
+
+    # Define the numerical features
+    num_features = ['temp', 'dew', 'humidity', 'windspeed', 'cloudcover', 'visibility']
+
+    # Drop holiday and snow columns
+    data = data.drop(columns=['holiday', 'snow'])
+
+    # Add a binary feature called "day" where 1 means "hour_of_day" is between 7 and 20, and 0 otherwise
+    data['day'] = ((data['hour_of_day'] >= 7) & (data['hour_of_day'] <= 20)).astype(int)
+
+    # Encode "snowdepth" as a binary feature where 1 means if there is snow and 0 otherwise
+    data['snowdepth'] = (data['snowdepth'] > 0).astype(int)
+
+    # Add a binary feature called "rain" where 1 means if "precip" is greater than 0, and 0 otherwise
+    data['rain'] = (data['precip'] > 0).astype(int)
+
+    # Drop "precip" column
+    data = data.drop(columns=['precip'])
+
+    # Compute scaler stats
+    scaler_stats = {
+        feature: {
+            'mean': data[feature].mean(),
+            'std': data[feature].std()
+        }
+        for feature in num_features
+    }
+
+    # Save scaler stats to JSON or joblib
+    with open(path_out + 'scaler_stats.json', 'w') as f:
+        json.dump(scaler_stats, f)
+
+    # Apply normalization
+    for feature in num_features:
+        mean = scaler_stats[feature]['mean']
+        std = scaler_stats[feature]['std']
+        data[feature] = (data[feature] - mean) / std
+
+    # Save the preprocessed dataset as csv
+    data.to_csv(path_out + name_out, index=False)
+
+
+def load_and_split_data(filepath, target_column, class_zero, test_size=0.2, random_state=0, cat_features=None):
+    """
+    Loads data from a CSV file, processes it, and returns train-test splits.
+
+    Parameters:
+        filepath (str): Path to the CSV file.
+        target_column (str): The name of the target column to be predicted.
+        class_zero (str): The name of the class to be used as the reference class (0).
+        convert_cat_target (bool): Whether to convert the target column to binary.
+        test_size (float): Fraction of the data to use as test set.
+        random_state (int): Random seed for reproducibility.
+        cat_features (list): List of categorical features to be converted to category type.
+
+    Returns:
+        tuple: X_train, X_test, y_train, y_test
+    """
+
+    df = pd.read_csv(filepath)
+
+    # Assign 0 to the class_zero and 1 to the other class in the target column
+    df[target_column] = np.where(df[target_column] == class_zero, 0, 1)
+    
+    if cat_features:
+        for feature in cat_features:
+            df[feature] = df[feature].astype('category')
+
+    # Split into features and target
+    X = df.copy()
+    y = X.pop(target_column)
+
+    # Split into train and test sets
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
+    
+    return X_train, X_test, y_train, y_test
 
 
 def find_optimal_hyperparameters(model, param_grid, X_train, y_train, cv=5, scoring='accuracy', n_jobs=-1, save_dir="", save_file='knn_best_params.json', extra_args={}, verbose_training=False):
-
     """
     Find the optimal hyperparameters for a model using GridSearchCV
     
@@ -74,6 +159,7 @@ def load_model_from_json(model, json_file):
 
     return model
 
+
 def plot_roc_curves(results):
     """
     Plot the ROC curves for the models
@@ -95,6 +181,7 @@ def plot_roc_curves(results):
     plt.legend(loc="lower right")
     plt.grid()
     plt.show()
+
 
 def fit_and_evaluate_multiple(models, X_train, y_train, X_test, y_test, verbose=False, verbose_training=False, float_precision=4):
     """
@@ -118,6 +205,7 @@ def fit_and_evaluate_multiple(models, X_train, y_train, X_test, y_test, verbose=
     for model in models:
         results[model.__class__.__name__] = fit_and_evaluate(model, X_train, y_train, X_test, y_test, verbose, verbose_training, float_precision)
     return results
+
 
 def fit_and_evaluate(model, X_train, y_train, X_test, y_test, verbose=False, verbose_training=False, float_precision=4):
     """
@@ -143,6 +231,7 @@ def fit_and_evaluate(model, X_train, y_train, X_test, y_test, verbose=False, ver
         model.fit(X_train, y_train)
     return evaluate(model, X_test, y_test, verbose, float_precision)
 
+
 def evaluate(model, X_test, y_test, verbose=False, float_precision=4):
     """
     Evaluates a model on the given data and returns the accuracy, precision, recall, F1, ROC AUC, and confusion matrix, fpr, tpr as a dictionary.
@@ -153,6 +242,7 @@ def evaluate(model, X_test, y_test, verbose=False, float_precision=4):
         y_test (pd.Series): The testing labels
         verbose (bool): Whether to print the results
         float_precision (int): The number of decimal places to print
+
     Returns:
         dict: The accuracy, precision, recall, F1, ROC AUC, confusion matrix, fpr, tpr
     """
@@ -229,43 +319,3 @@ def fit_and_save_predictions(model, training_data, X_eval, target_column, class_
     # Save the predictions to a CSV file
     y_pred_df = pd.DataFrame(y_pred_row)
     y_pred_df.to_csv("data/final_predictions.csv", header=False, index=False)
-
-
-def fit_and_save_model(model, training_data, scaler_stats, target_column, class_zero, out_path):
-    """
-    Fits a model on the given data and saves the predictions on the evaluation data.
-    
-    Parameters:
-        model: The model
-        training_data (csv): Path to the training data
-        scaler_stats (json): Path to the scaler stats
-        target_column (str): The name of the target column to be predicted
-        class_zero (str): The name of the class to be used as the reference class (0)
-        out_path (str): The path to save the trained model
-    """
-
-    # Load scaler stats
-    with open(scaler_stats, 'r') as f:
-        scaler_stats = json.load(f)
-
-    # Load training data
-    training_data = pd.read_csv(training_data)
-
-    # Assign 0 to the class_zero and 1 to the other class in the target column
-    training_data[target_column] = np.where(training_data[target_column] == class_zero, 0, 1)
-
-    # Split training data into features and target
-    X_train = training_data.copy()
-    y_train = X_train.pop(target_column)
-
-    # Fit the model on the training data
-    model.fit(X_train, y_train)
-
-    # Save the model
-    joblib.dump(
-        {
-            'model': model,
-            'scaler_stats': scaler_stats
-        },
-        out_path
-    )

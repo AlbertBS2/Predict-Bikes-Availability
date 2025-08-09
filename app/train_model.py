@@ -1,6 +1,5 @@
 from sklearn.ensemble import RandomForestClassifier
-from utils.utils import load_model_from_json, fit_and_save_model
-from utils.feature_eng import preprocess
+from utils.app_utils import preprocess, load_model_from_json, fit_and_save_model
 
 
 model = load_model_from_json(RandomForestClassifier, "app/model/best_params/rf_best_params.json")
