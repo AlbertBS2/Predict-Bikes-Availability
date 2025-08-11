@@ -1,14 +1,33 @@
 ## Abstract
 This project explores different machine learning models for predicting whether there will be a low or high demand on shared bicycles in Washington DC. The explored models include Logistic Regression, K-nearest neighbors, Random forest, XGBoost and CatBoost. Hyperparameter tuning was done on all the models and after evaluating them on a validation-set with recall as focus metric. Finally, the random forest model was selected to be used in production.
 
-## Directory Structure
+## How to run
 
-- `data/`: Contains all CSV files used and generated during the project.
-- `libs/`: Includes libraries with functions used across other files.
-- `models/`: Jupyter notebooks for training, testing, and optimizing all models.
-- `output/best_params/`: JSON files containing the best parameters obtained for each model.
-- `data_analysis.ipynb`: Notebook for data exploration and visualization.
-- `main.ipynb`: Notebook for generating final results and graphs.
+**With Docker:**
+
+```bash
+docker compose up
+```
+
+**Manually:**
+
+Install requirements:
+
+```bash
+pip install -r requirements.txt
+```
+
+Run the model api:
+
+```bash
+uvicorn app.api.model-api:app --host 0.0.0.0 --port 80
+```
+
+Launch the frontend:
+
+```bash
+streamlit run app/App.py --server.port=8501 --server.address=0.0.0.0
+```
 
 ---
 
