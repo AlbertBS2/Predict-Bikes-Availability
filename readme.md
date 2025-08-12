@@ -1,5 +1,7 @@
 ## Abstract
-This project explores different machine learning models for predicting whether there will be a low or high demand on shared bicycles in Washington DC. The explored models include Logistic Regression, K-nearest neighbors, Random forest, XGBoost and CatBoost. Hyperparameter tuning was done on all the models and after evaluating them on a validation-set with recall as focus metric. Finally, the random forest model was selected to be used in production.
+
+This project is a production-ready machine learning system for predicting whether public shared bicycle demand in Washington DC will be low or high. It implements a full ML lifecycle, from exploratory data analysis, feature engineering, and model experimentation to deployment and real-time inference. Five ML algorithms were tested, with Random Forest selected for production based on recall performance.
+The system includes a FastAPI to deploy the model for inference service, a visual Streamlit frontend, and Dockerized architecture for reproducible multi-service deployment.
 
 ##
 ![GIF](demo.gif)
