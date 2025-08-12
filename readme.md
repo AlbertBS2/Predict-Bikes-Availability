@@ -1,17 +1,20 @@
 ## Abstract
 This project explores different machine learning models for predicting whether there will be a low or high demand on shared bicycles in Washington DC. The explored models include Logistic Regression, K-nearest neighbors, Random forest, XGBoost and CatBoost. Hyperparameter tuning was done on all the models and after evaluating them on a validation-set with recall as focus metric. Finally, the random forest model was selected to be used in production.
 
+##
+![GIF](demo.gif)
+
 ## How to run
 
-**With Docker:**
+**Option A - With Docker:**
 
 ```bash
 docker compose up
 ```
 
-**Manually:**
+**Option B - Manually:**
 
-Install requirements:
+Install requirements.
 
 ```bash
 pip install -r requirements.txt
@@ -23,13 +26,37 @@ Run the model api:
 uvicorn app.api.model-api:app --host 0.0.0.0 --port 80
 ```
 
-Launch the frontend:
+Launch the web app:
 
 ```bash
 streamlit run app/App.py --server.port=8501 --server.address=0.0.0.0
 ```
 
----
+## Project Overview
+
+Urban bike-sharing systems depend heavily on demand prediction to avoid shortages. This project builds and deploys a machine learning system that predicts bike availability for shared public bicycles in Washington DC based on weather data and previous demand.
+
+With the focus on prioritizing recall, this system minimizes the risk of under-predicting high demand periods, reducing the likelihood of bike shortages.
+
+It consists on:
+- Exploratory data analysis & feature engineering in Jupyter notebooks.
+- Model experimentation and evaluation with hyperparameter tuning.
+- Production-ready deployment via FastAPI, Streamlit & Docker.
+
+This project is build following a modular design, which supports scaling to other cities, retraining on new datasets, and extending to multiclass demand levels.
+
+## Project Structure
+
+- `app/` # Main app codebase
+   - `api/` # FastAPI service for model inference and API utilities
+   - `data/` # Datasets, preprocessed files, and scaler statistics
+   - `model/` # Trained production model and saved best hyperparameters for each of the evaluated models
+   - `pages/` # Streamlit app multi-page scripts
+   - `utils/` # Reusable functions shared across the app
+   - `App.py` # Entry point for the Streamlit app frontend
+   - `feature_eng.py` # Script for feature engineering and preprocessing
+   - `train_model.py` # Script to train and save the final production model
+- `notebooks` # Jupyter notebooks for EDA, model training, experimentation, and evaluation
 
 ## Reproducing the Results
 
@@ -38,14 +65,24 @@ Follow these steps to reproduce the results:
 1. **Install Dependencies**  
    - Ensure you have the required libraries by installing them from `requirements.txt`.
 
+      ```bash
+      pip install -r requirements.txt
+      ```
+
 2. **Data Analysis**
-   - Open `data_analysis.ipynb`.
+   - Open `notebooks/data_analysis.ipynb`.
    - Run all cells to view the results and graphs.
 
 3. **Model Training and Optimization**
-   - Open each notebook in the `models/` directory.
-   - Run all cells in each notebook. The optimal parameters for each model will be saved in the `models/best_params/` directory.
+   - Open each notebook in the `notebooks/` directory.
+   - Run all cells in each notebook. The optimal parameters for each model will be saved in the `app/model/best_params/` directory.
 
 4. **Final Results**
-   - Open `main.ipynb`.
-   - Run all cells to see the final results and graphs.
+   - Open `notebooks/main.ipynb`.
+   - Run all cells to see the final evaluation with the results and graphs.
+
+## Full Report:
+
+Detailed methodology, experiments, and results are documented in:
+
+📄 [Predict Bikes Availability Report](Predict-Bikes-Availability_Report.pdf)
