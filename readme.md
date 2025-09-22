@@ -1,7 +1,6 @@
 ## Abstract
 
-Ensuring availability is essential for delivering good service and enhancing customer experience in public bike-sharing systems, as well as for maintaining operational efficiency. This production-ready machine learning system predicts whether demand for public shared bicycles in Washington DC will be low or high, helping to address these challenges. It implements a full ML lifecycle, from exploratory data analysis, feature engineering, and model experimentation to deployment and real-time inference. Five ML algorithms were tested, with Random Forest selected for production based on recall performance.
-The system includes a FastAPI to deploy the model for inference service, a visual Streamlit frontend, and Dockerized architecture for reproducible multi-service deployment.
+Ensuring availability is essential for delivering good service and enhancing customer experience in public bike-sharing systems, as well as for maintaining operational efficiency. This production-ready machine learning system predicts whether demand for public shared bicycles in Washington DC will be low or high, helping to address these challenges. It implements a full ML lifecycle, from exploratory data analysis, feature engineering, and model experimentation to deployment and real-time inference. Five ML algorithms were tested, with Random Forest selected for production based on recall performance. The system automatically fetches real-time weather forecast data from the Open-Meteo API, enabling more accurate demand estimation. It provides a FastAPI backend to deploy the model for inference, a visual Streamlit frontend, and Dockerized architecture for reproducible multi-service deployment.
 
 ##
 ![GIF](demo.gif)
