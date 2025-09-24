@@ -1,9 +1,9 @@
 FROM python:3.10
 WORKDIR /
 
-COPY app/requirements-frontend.txt ./requirements.txt
-COPY app/App.py ./app/App.py
-COPY app/pages/ ./app/pages/
+COPY ../app/requirements-frontend.txt ./requirements.txt
+COPY ../app/App.py ./app/App.py
+COPY ../app/pages/ ./app/pages/
 
 RUN pip install --no-cache-dir -r requirements.txt
 
